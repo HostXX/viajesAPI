@@ -3,6 +3,8 @@ const LogEntry = require('../models/LogEntry')
 
 const router = Router()
 
+const { API_KEY } = process.env
+
 router.get('/', (req, res) => {
   res.json({
     message: '🗺',
@@ -29,6 +31,11 @@ router.get('/all', async (req, res, next) => {
 
 router.post('/post', async (req, res, next) => {
   try {
+    if (req.get('API_KEY') !== API_KEY) {
+      res.status(401)
+      throw new Error('UnAuthorized')
+    }
+
     const newLogEntry = new LogEntry(req.body)
     const savedEntrie = await newLogEntry.save()
     // console.log(savedEntrie);
@@ -40,6 +47,8 @@ router.post('/post', async (req, res, next) => {
     return next(error)
   }
 })
+
+// modify in construccion
 
 router.put('/modify', async (req, res, next) => {
   try {
@@ -59,7 +68,7 @@ router.delete('/delete', async (req, res, next) => {
     const removed = await LogEntry.deleteOne({ _id: req.body.entryId })
     res.status(200)
     return res.json({
-      removed,
+      ...removed,
     })
   } catch (error) {
     if (error.name === 'ValidationError') {

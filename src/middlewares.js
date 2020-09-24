@@ -8,7 +8,7 @@ const notFound = (req, res, next) => {
 const errorHandler = (error, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode
   res.status(statusCode)
-  console.log(error.name);
+  // console.log(error.name);
   res.json({
     message: error.message,
     stack: process.env.DEV_STATUS === 'development' ? error.stack : '🤔 💕',
