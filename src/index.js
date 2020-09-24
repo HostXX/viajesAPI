@@ -10,12 +10,17 @@ const logs = require('./api/logs')
 const middlewares = require('./middlewares')
 
 const app = express()
+app.enable('trust proxy')
 
 app.use(express.json())
-app.use(morgan(process.env.DEV_STATUS === 'development' ? 'combined' : 'common'))
+app.use(
+  morgan(process.env.DEV_STATUS === 'development' ? 'combined' : 'common'),
+)
 app.use(helmet())
 app.use(
-  cors(),
+  cors({
+    origin: process.env.CORS_ORIGIN,
+  }),
 )
 
 app.get('/', async (req, res) => {
