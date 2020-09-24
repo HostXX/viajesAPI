@@ -1,21 +1,10 @@
 const { Router } = require('express')
-const RateLimit = require('express-rate-limit');
-const MongoStore = require('rate-limit-mongo');
+
 const LogEntry = require('../models/LogEntry')
 
 const router = Router()
 
 const { API_KEY } = process.env
-
-const rateLimitDelay = 5 * 1000; // 10 second delay
-const limiter = new RateLimit({
-  store: new MongoStore({
-    uri: process.env.MONGO_URI,
-    expireTimeMs: rateLimitDelay,
-  }),
-  max: 1,
-  windowMs: rateLimitDelay,
-});
 
 router.get('/', (req, res) => {
   res.json({
@@ -33,7 +22,7 @@ router.get('/all', async (req, res, next) => {
   }
 })
 
-router.post('/post', limiter, async (req, res, next) => {
+router.post('/post', async (req, res, next) => {
   try {
     if (req.get('API_KEY') !== API_KEY) {
       res.status(401)
