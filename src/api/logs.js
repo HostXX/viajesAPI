@@ -9,6 +9,14 @@ router.get('/', (req, res) => {
   })
 })
 
+// router.post('/test', async (req, res, next) => {
+//   console.log(req.body)
+//   res.app.set('testPassingValue', req.body)
+//   res.json({
+//     message: 'received',
+//   })
+// })
+
 router.get('/all', async (req, res, next) => {
   try {
     const allLogs = await LogEntry.find()
@@ -29,20 +37,35 @@ router.post('/post', async (req, res, next) => {
     if (error.name === 'ValidationError') {
       res.status(422)
     }
-    next(error)
+    return next(error)
   }
 })
 
-router.delete('/delete', async (req, res, next) => {
+router.put('/modify', async (req, res, next) => {
   try {
     return res.json({
-      message: 'deleted succed',
+      message: 'modify completed',
     })
   } catch (error) {
     if (error.name === 'ValidationError') {
       return res.status(422)
     }
-    next(error)
+    return next(error)
+  }
+})
+
+router.delete('/delete', async (req, res, next) => {
+  try {
+    const removed = await LogEntry.deleteOne({ _id: req.body.entryId })
+    res.status(200)
+    return res.json({
+      removed,
+    })
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(422)
+    }
+    return next(error)
   }
 })
 
