@@ -26,7 +26,7 @@ app.use(morgan(process.env.DEV_STATUS === 'development' ? 'combined' : 'common')
 app.use(helmet())
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: [process.env.CORS_ORIGIN, process.env.CORS_ORIGIN2],
   }),
 )
 app.use(limiter)
