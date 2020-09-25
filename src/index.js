@@ -15,7 +15,7 @@ const limiter = new RateLimit({
     uri: process.env.MONGO_URI,
     expireTimeMs: rateLimitDelay,
   }),
-  max: 3,
+  max: 15,
   windowMs: rateLimitDelay,
 });
 
