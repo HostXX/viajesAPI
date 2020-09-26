@@ -1,5 +1,5 @@
 const { Router } = require('express')
-
+const QRCode = require('qrcode')
 const LogEntry = require('../models/LogEntry')
 
 const router = Router()
@@ -20,6 +20,18 @@ router.get('/all', async (req, res, next) => {
   } catch (error) {
     next(error)
   }
+})
+
+router.post('/qr', (req, res) => {
+  const qrStringInfo = req.body.qrString
+    ? req.body.qrString
+    : 'https://www.youtube.com/watch?v=G1IbRujko-A'
+  console.log(qrStringInfo)
+  QRCode.toDataURL(qrStringInfo, (err, url) => {
+    res.json({
+      imageQR: url,
+    })
+  })
 })
 
 router.post('/post', async (req, res, next) => {
@@ -220,6 +232,25 @@ router.get('/artists', (req, res) => {
         genre: 'Rock',
       },
       {
+        // function passParam (req, res, next) {
+        //   QRCode.toFile(
+        //     'path/to/filename.png',
+        //     'Some text',
+        //     {
+        //       color: {
+        //         dark: '#00F', // Blue dots
+        //         light: '#0000' // Transparent background
+        //       }
+        //     },
+        //     function (err) {
+        //       if (err) throw err
+        //       console.log('done')
+        //     }
+        //   )
+        //   req.user = 'mau aqui'
+        //   next()
+        // }
+
         id: 5,
         name: 'Kirk_fletcher',
         cover: 'kirk-fletcher',
